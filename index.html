@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In-Memory KanBan Board</title>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+.board {
+    display: flex;
+    flex-wrap: wrap;
+}
+.column {
+    flex: 1;
+    min-width: 200px;
+    margin: 5px;
+    background-color: #f4f4f4;
+}
+.column h2 {
+    text-align: center;
+    background-color: #ccc;
+    margin: 0;
+    padding: 10px;
+}
+.card {
+    background-color: #fff;
+    margin: 10px;
+    padding: 10px;
+    cursor: move;
+    border: 1px solid #ccc;
+}
+@media (max-width: 600px) {
+    .column {
+        flex-basis: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="board">
+    <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>TODO</h2>
+        <div class="card" draggable="true" ondragstart="drag(event)">Task 1</div>
+    </div>
+    <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>DOING</h2>
+        <div class="card" draggable="true" ondragstart="drag(event)">Task 2</div>
+    </div>
+    <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>BLOCKED</h2>
+        <div class="card" draggable="true" ondragstart="drag(event)">Task 3</div>
+    </div>
+    <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>BACKLOG</h2>
+        <div class="card" draggable="true" ondragstart="drag(event)">Task 4</div>
+    </div>
+</div>
+
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text/html", ev.target.outerHTML);
+    ev.dataTransfer.setData("sourceId", ev.target.parentElement.id);
+    ev.target.classList.add('dragging');
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text/html");
+    ev.target.closest('.column').insertAdjacentHTML('beforeend', data);
+    document.querySelector('.dragging').remove();
+}
+</script>
+
+</body>
+</html>
